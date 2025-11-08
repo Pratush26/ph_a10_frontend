@@ -1,16 +1,21 @@
+@reference "tailwindcss";
+
 nav a.active {
     color: blueviolet;
     text-decoration: underline;
     text-underline-offset: 4px;
 }
 
-/* .btn {
-    @apply px-4 py-2 text-sm font-semibold bg-gradient-to-br cursor-pointer from-violet-900 to-purple-500 hover:from-indigo-800 hover:to-purple-600 text-white rounded-sm;
+.btn {
+    @apply px-4 py-2 text-sm font-medium bg-gradient-to-br cursor-pointer from-green-800 to-green-500 hover:from-emerald-900 text-white rounded-sm;
+}
+.btn-out {
+    @apply px-4 py-2 text-sm font-semibold border cursor-pointer hover:text-gray-300 rounded-sm;
 }
 
 .trnsition {
     @apply transition-all duration-200 transition-discrete;
-} */
+}
 
 input,
 textarea {

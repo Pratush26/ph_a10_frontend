@@ -1,0 +1,8 @@
+#banner{
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: url('https://images.unsplash.com/photo-1562709902-31c9a3b1ad5c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1031');
+    background-repeat: no-repeat;
+    min-height: 100%;
+}
