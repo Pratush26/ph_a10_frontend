@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import HomePage from "../Pages/Home";
 import App from "../App";
+import axios from "axios";
 
 export const router = createBrowserRouter([
   {
@@ -9,6 +10,7 @@ export const router = createBrowserRouter([
     children: [
         {
             index: true,
+            loader: () => axios(`${import.meta.env.VITE_SERVER}/featured-foods`),
             Component: HomePage
         }
     ]
