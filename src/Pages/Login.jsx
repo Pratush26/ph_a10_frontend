@@ -1,15 +1,30 @@
+import { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
 import { FcGoogle } from "react-icons/fc"
+import { AuthContext } from "../Context/AuthContext"
+import { Link, Navigate } from "react-router"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 
 
 export default function LoginPage() {
+    const { user, sigInUser, googleSignIn } = useContext(AuthContext)
+    const [showPassword, setShowPassword] = useState(false)
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors, isSubmitting },
     } = useForm()
-    const onSubmit = (data) => console.log(data)
-
+    if(user) return <Navigate to='/' />
+    const onSubmit = (data) => {
+        sigInUser(data.email, data.password).then(() => {
+            console.log("res")
+            reset()
+        }).catch(err => console.error(err))
+    }
+    const handleGoogleLogin = () => {
+        googleSignIn().then(res => console.log(res)).catch(err => console.error(err))
+    }
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-1/2 shadow-lg/50 shadow-gray-800 px-8 py-12 my-6 mx-2 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
             <h1 className="text-2xl font-semibold">Login Form</h1>
@@ -17,13 +32,15 @@ export default function LoginPage() {
                 {errors.email ? <p className="text-sm text-rose-500">{errors.email.message}</p> : <label>Email :</label>}
                 <input type="email" {...register("email", { required: "Email is required" })} placeholder="Enter your email" id="email" />
             </div>
-            <div className="w-full">
+            <div className="w-full relative">
                 {errors.password ? <p className="text-sm text-rose-500">{errors.password.message}</p> : <label>Password :</label>}
-                <input type="password" placeholder="Enter password" id="password"
+                <input type={`${showPassword ? 'text' : 'password'}`} placeholder="Enter password" id="password"
                     {...register("password", { required: "Password is required", pattern: { value: /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/, message: "Password must contain at least 6 characters including upper and lowercase letters" } })} />
+                    <button type='button' onClick={() => setShowPassword(!showPassword)} className='absolute p-1 right-2 bottom-0 -translate-y-1/2 cursor-pointer'>{showPassword ? <FaEyeSlash /> : <FaEye />}</button>
             </div>
-            <button disabled={isSubmitting} type="submit" className="btn trnsition mt-4">{isSubmitting ? "Registering..." : "Register"}</button>
-            <button disabled={isSubmitting} type="button" className="btn-out hover:text-gray-500 trnsition my-1 flex items-center-safe gap-2"><FcGoogle />Login with Google</button>
+            <p className=" text-sm my-4">Don't have an account? <Link to='/register' className="text-sky-500 font-medium hover:text-blue-600 trnsition">Register</Link></p>
+            <button disabled={isSubmitting} type="submit" className="btn trnsition">{isSubmitting ? "Logging in..." : "Login"}</button>
+            <button disabled={isSubmitting} type="button" onClick={handleGoogleLogin} className="btn-out hover:text-gray-500 trnsition my-1 flex items-center-safe gap-2"><FcGoogle />Login with Google</button>
         </form>
     )
 }

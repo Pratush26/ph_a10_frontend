@@ -8,6 +8,7 @@ import LoginPage from "../Pages/Login";
 import MyFoodsPage from "../Pages/MyFoods";
 import FoodDetails from "../Pages/Details";
 import LoadingPage from "../Layouts/Loading";
+import PrivateRoute from "../Utils/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -33,7 +34,7 @@ export const router = createBrowserRouter([
         {
             path: '/food/details/:id',
             loader: ({params}) => axios(`${import.meta.env.VITE_SERVER}/foods/${params.id}`),
-            Component: FoodDetails
+            element: <PrivateRoute><FoodDetails /></PrivateRoute>
         },
         {
             path: '/register',
