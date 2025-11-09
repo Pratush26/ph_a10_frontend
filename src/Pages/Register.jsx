@@ -2,7 +2,7 @@ import { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
 import { FcGoogle } from "react-icons/fc"
 import { AuthContext } from "../Context/AuthContext"
-import { Link, Navigate } from "react-router"
+import { Link, Navigate, useLocation, useNavigate } from "react-router"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import axios from "axios"
 
@@ -10,13 +10,11 @@ import axios from "axios"
 export default function RegistrationPage() {
     const { user, createUser, updateUser, googleSignIn } = useContext(AuthContext)
     const [showPassword, setShowPassword] = useState(false)
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors, isSubmitting },
-    } = useForm()
-    if (user) return <Navigate to='/' />
+    const navigate = useNavigate()
+    const { state } = useLocation()
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
+    if (user) navigate(state || "/");
+
     const onSubmit = (data) => {
         const formData = new FormData();
         formData.append("image", data.image[0]);
@@ -29,9 +27,11 @@ export default function RegistrationPage() {
             }).catch(e => console.error(e))
         }).catch((er) => console.error(er));
     }
+
     const handleGoogleLogin = () => {
-        googleSignIn().then(res => console.log(res)).catch(err => console.error(err))
+        googleSignIn().then(() => navigate(state || "/")).catch(err => console.error(err))
     }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-1/2 shadow-lg/50 shadow-gray-800 px-8 py-12 my-6 mx-2 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
             <h1 className="text-2xl font-semibold">Registration Form</h1>
@@ -53,7 +53,7 @@ export default function RegistrationPage() {
                 {errors.image ? <p className="text-sm text-rose-500">{errors.image.message}</p> : <label htmlFor="image">Image :</label>}
                 <input type="file" {...register("image", { required: "image is required" })} placeholder="Enter image url" id="image" />
             </div>
-            <p className=" text-sm my-4">Already have an account? <Link to='/login' className="text-sky-500 font-medium hover:text-blue-600 trnsition">Login</Link></p>
+            <p className=" text-sm my-4">Already have an account? <Link state={state || '/'} to='/login' className="text-sky-500 font-medium hover:text-blue-600 trnsition">Login</Link></p>
             <button disabled={isSubmitting} type="submit" className="btn trnsition">{isSubmitting ? "Registering..." : "Register"}</button>
             <button disabled={isSubmitting} type="button" onClick={handleGoogleLogin} className="btn-out hover:text-gray-500 trnsition my-1 flex items-center-safe gap-2"><FcGoogle />Sign in with Google</button>
         </form>
