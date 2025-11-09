@@ -23,6 +23,7 @@ export default function Navbar() {
                     <NavLink className="hover:text-gray-500 trnsition" to='/'>Home</NavLink>
                     <NavLink className="hover:text-gray-500 trnsition" to='/all-foods'>Available Foods</NavLink>
                     <NavLink className="hover:text-gray-500 trnsition" to='/my-foods'>My Foods</NavLink>
+                    <NavLink className="hover:text-gray-500 trnsition" to='/add-food'>Add Food</NavLink>
                 </div>
                 {
                     loading?

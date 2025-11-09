@@ -9,6 +9,7 @@ import MyFoodsPage from "../Pages/MyFoods";
 import FoodDetails from "../Pages/Details";
 import LoadingPage from "../Layouts/Loading";
 import PrivateRoute from "../Utils/PrivateRoute";
+import AddFoodForm from "../Pages/AddFoods";
 
 export const router = createBrowserRouter([
   {
@@ -24,12 +25,16 @@ export const router = createBrowserRouter([
         {
             path: '/all-foods',
             loader: () => axios(`${import.meta.env.VITE_SERVER}/foods`),
-            Component: AllFoodsPage
+            element: <PrivateRoute><AllFoodsPage /></PrivateRoute>
         },
         {
             path: '/my-foods',
             loader: () => axios(`${import.meta.env.VITE_SERVER}/foods`),
-            Component: MyFoodsPage
+            element: <PrivateRoute><MyFoodsPage /></PrivateRoute>
+        },
+        {
+            path: '/add-food',
+            element: <PrivateRoute><AddFoodForm /></PrivateRoute>
         },
         {
             path: '/food/details/:id',
