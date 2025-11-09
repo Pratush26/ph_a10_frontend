@@ -6,10 +6,13 @@ import AllFoodsPage from "../Pages/AllFoods";
 import RegistrationPage from "../Pages/Register";
 import LoginPage from "../Pages/Login";
 import MyFoodsPage from "../Pages/MyFoods";
+import FoodDetails from "../Pages/Details";
+import LoadingPage from "../Layouts/Loading";
 
 export const router = createBrowserRouter([
   {
     path: "/",
+    hydrateFallbackElement: <LoadingPage />,
     Component: App,
     children: [
         {
@@ -26,6 +29,11 @@ export const router = createBrowserRouter([
             path: '/my-foods',
             loader: () => axios(`${import.meta.env.VITE_SERVER}/foods`),
             Component: MyFoodsPage
+        },
+        {
+            path: '/food/details/:id',
+            loader: ({params}) => axios(`${import.meta.env.VITE_SERVER}/foods/${params.id}`),
+            Component: FoodDetails
         },
         {
             path: '/register',
