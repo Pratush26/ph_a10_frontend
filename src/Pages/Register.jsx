@@ -4,6 +4,7 @@ import { FcGoogle } from "react-icons/fc"
 import { AuthContext } from "../Context/AuthContext"
 import { Link, Navigate } from "react-router"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
+import axios from "axios"
 
 
 export default function RegistrationPage() {
@@ -17,12 +18,16 @@ export default function RegistrationPage() {
     } = useForm()
     if (user) return <Navigate to='/' />
     const onSubmit = (data) => {
-        createUser(data.email, data.password).then(() => {
-            updateUser(data.name, data.image).then(() => {
-                console.log("D")
-                reset()
-            }).catch(err => console.error(err))
-        }).catch(err => console.error(err))
+        const formData = new FormData();
+        formData.append("image", data.image[0]);
+        axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMG_BB_KEY}`, formData).then((res) => {
+            createUser(data.email, data.password).then(() => {
+                updateUser(data.name, res.data.data.display_url).then(() => {
+                    console.log("D")
+                    reset()
+                }).catch(err => console.error(err))
+            }).catch(e => console.error(e))
+        }).catch((er) => console.error(er));
     }
     const handleGoogleLogin = () => {
         googleSignIn().then(res => console.log(res)).catch(err => console.error(err))
@@ -46,7 +51,7 @@ export default function RegistrationPage() {
             </div>
             <div className="w-full">
                 {errors.image ? <p className="text-sm text-rose-500">{errors.image.message}</p> : <label>Image :</label>}
-                <input type="url" {...register("image", { required: "image is required" })} placeholder="Enter image url" id="image" />
+                <input type="file" {...register("image", { required: "image is required" })} placeholder="Enter image url" id="image" />
             </div>
             <p className=" text-sm my-4">Already have an account? <Link to='/login' className="text-sky-500 font-medium hover:text-blue-600 trnsition">Login</Link></p>
             <button disabled={isSubmitting} type="submit" className="btn trnsition">{isSubmitting ? "Registering..." : "Register"}</button>

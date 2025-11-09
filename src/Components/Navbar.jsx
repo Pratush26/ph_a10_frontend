@@ -37,8 +37,8 @@ export default function Navbar() {
                                 <p>{user?.displayName}</p>
                                 <IoIosArrowDown />
                             </div>
-                            <div className={`${isHover ? "cursor-pointer bg-stone-50" : "hidden"} absolute w-full text-start bottom-0 translate-y-full px-4 py-2 hover:bg-stone-100 z-100`}>
-                                <button onClick={handleSignOut} className="w-full text-start">Log out</button>
+                            <div className={`${isHover ? "bg-stone-50" : "hidden"} absolute w-full text-start bottom-0 translate-y-full z-100`}>
+                                <button onClick={handleSignOut} className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2">Log out</button>
                             </div>
                         </section>
                         :
