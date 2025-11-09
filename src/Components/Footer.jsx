@@ -12,17 +12,15 @@ export default function Footer() {
                 </div>
                 <div className="text-gray-400 flex flex-col gap-3 text-sm">
                     <h6 className="text-lg font-semibold text-white">Quick Links</h6>
-                    <Link className="hover:text-gray-200 trnsition" to='/'>All Products</Link>
-                    <Link className="hover:text-gray-200 trnsition" to='/'>Dashboard</Link>
+                    <Link className="hover:text-gray-200 trnsition" to='/'>All Foods</Link>
+                    <Link className="hover:text-gray-200 trnsition" to='/'>Home</Link>
                     <Link className="hover:text-gray-200 trnsition" to='/'>Login</Link>
                     <Link className="hover:text-gray-200 trnsition" to='/'>Register</Link>
                 </div>
                 <div className="text-gray-400 flex flex-col gap-3 text-sm">
-                    <h6 className="text-lg font-semibold text-white">Categories</h6>
-                    <Link className="hover:text-gray-200 trnsition" to='/'>Electronics</Link>
-                    <Link className="hover:text-gray-200 trnsition" to='/'>Fashion</Link>
-                    <Link className="hover:text-gray-200 trnsition" to='/'>Home & Living</Link>
-                    <Link className="hover:text-gray-200 trnsition" to='/'>Groceries</Link>
+                    <h6 className="text-lg font-semibold text-white">Features</h6>
+                    <Link className="hover:text-gray-200 trnsition" to='/'>Add Foods</Link>
+                    <Link className="hover:text-gray-200 trnsition" to='/'>My Foods</Link>
                 </div>
                 <div className="text-gray-400 flex flex-col gap-3 text-sm">
                     <h6 className="text-lg font-semibold text-white">Contact & Support</h6>

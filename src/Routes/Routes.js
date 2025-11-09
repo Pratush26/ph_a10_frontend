@@ -2,6 +2,10 @@ import { createBrowserRouter } from "react-router";
 import HomePage from "../Pages/Home";
 import App from "../App";
 import axios from "axios";
+import AllFoodsPage from "../Pages/AllFoods";
+import RegistrationPage from "../Pages/Register";
+import LoginPage from "../Pages/Login";
+import MyFoodsPage from "../Pages/MyFoods";
 
 export const router = createBrowserRouter([
   {
@@ -12,7 +16,25 @@ export const router = createBrowserRouter([
             index: true,
             loader: () => axios(`${import.meta.env.VITE_SERVER}/featured-foods`),
             Component: HomePage
-        }
+        },
+        {
+            path: '/all-foods',
+            loader: () => axios(`${import.meta.env.VITE_SERVER}/foods`),
+            Component: AllFoodsPage
+        },
+        {
+            path: '/my-foods',
+            loader: () => axios(`${import.meta.env.VITE_SERVER}/foods`),
+            Component: MyFoodsPage
+        },
+        {
+            path: '/register',
+            Component: RegistrationPage
+        },
+        {
+            path: '/login',
+            Component: LoginPage
+        },
     ]
   },
 ]);

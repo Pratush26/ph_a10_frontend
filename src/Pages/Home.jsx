@@ -22,7 +22,7 @@ export default function HomePage() {
                     </ul>
                     <div className="flex gap-4">
                         <button className="btn border-none trnsition shadow-none">View All Foods</button>
-                        <button className='btn-out trnsition'>Become a Volunteer</button>
+                        <button className='btn-out hover:text-gray-300 trnsition'>Become a Volunteer</button>
                     </div>
                 </div>
             </section>
@@ -100,19 +100,19 @@ export default function HomePage() {
                 <section className='grid grid-cols-3 place-content-center gap-3 w-11/12 mx-auto my-10'>
                     <div className='bg-white rounded-md px-8 py-10 text-sm'>
                         <p className='text-xl font-medium'>Mission</p>
-                        <p>To create a world where surplus food becomes a solution to hunger, not waste. 
-    We're building a community-driven platform that makes food sharing simple, 
-    accessible, and impactful for everyone..</p>
+                        <p>To create a world where surplus food becomes a solution to hunger, not waste.
+                            We're building a community-driven platform that makes food sharing simple,
+                            accessible, and impactful for everyone..</p>
                     </div>
                     <div className='bg-white rounded-md px-8 py-10 text-sm'>
                         <p className='text-xl font-medium'>Vision</p>
-                        <p>A future where every community has access to surplus food resources, 
-      eliminating both food waste and hunger through technology and compassion.</p>
+                        <p>A future where every community has access to surplus food resources,
+                            eliminating both food waste and hunger through technology and compassion.</p>
                     </div>
                     <div className='bg-white rounded-md px-8 py-10 text-sm'>
                         <p className='text-xl font-medium'>Promise</p>
-                        <p>To maintain a safe, transparent platform where every food donation 
-      reaches those who need it most, with dignity and respect.</p>
+                        <p>To maintain a safe, transparent platform where every food donation
+                            reaches those who need it most, with dignity and respect.</p>
                     </div>
                 </section>
             </section>

@@ -1,7 +1,6 @@
 @reference "tailwindcss";
 
 nav a.active {
-    color: blueviolet;
     text-decoration: underline;
     text-underline-offset: 4px;
 }
@@ -10,7 +9,7 @@ nav a.active {
     @apply px-4 py-2 text-sm font-medium bg-gradient-to-br cursor-pointer from-green-800 to-green-500 hover:from-green-900 hover:to-green-600 text-white rounded-sm;
 }
 .btn-out {
-    @apply px-4 py-2 text-sm font-semibold border cursor-pointer hover:text-gray-300 rounded-sm;
+    @apply px-4 py-2 text-sm font-semibold border cursor-pointer rounded-sm;
 }
 
 .trnsition {
@@ -24,7 +23,7 @@ textarea {
     font-size: .9rem;
     width: 100%;
     border-radius: 6px;
-    box-shadow: 2px 2px 4px rgba(137, 43, 225, 0.3);
+    box-shadow: 2px 2px 4px rgba(1, 21, 0, 0.425);
 }
 
 input:focus,
