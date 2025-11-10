@@ -7,12 +7,7 @@ import axios from "axios"
 
 export default function AddFoodForm() {
     const { user } = useContext(AuthContext)
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors, isSubmitting },
-    } = useForm()
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
     const onSubmit = (data) => {
         const formData = new FormData();
         formData.append("image", data.image[0]);

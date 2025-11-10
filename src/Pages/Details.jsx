@@ -1,10 +1,32 @@
 import { useLoaderData } from "react-router";
 import ImgManager from "../Components/ImgManager";
 import "../Utils/utility.css"
+import { useForm } from "react-hook-form";
+import { useContext, useRef } from "react";
+import { AuthContext } from "../Context/AuthContext";
 
 export default function FoodDetails() {
+    const {user} = useContext(AuthContext)
     const { data } = useLoaderData()
-    console.log(data)
+    const modalRef = useRef(null);
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
+    const handleModal = () => modalRef.current.showModal()
+    const onSubmit = (d) => {
+        const newObj = {
+            location: d.location,
+            phone: d.phone,
+            reason: d.reason,
+            // quantity:,
+            email: user.email,
+            name: user.displayName,
+            image: user.photoURL,
+            status: "pending",
+            food_id: data._id
+        }
+        console.log(newObj)
+        modalRef.current.close()
+        reset()
+    }
     return (
         <main className="w-full">
             <section className="grid grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
@@ -27,7 +49,7 @@ export default function FoodDetails() {
                     <p className="font-medium">Location : {data.pickup_location}</p>
                     <hr />
                     <p>{data.additional_notes}</p>
-                    <button className="btn trnsition">Request Food</button>
+                    <button onClick={handleModal} className="btn trnsition">Request Food</button>
                 </article>
             </section>
             {
@@ -70,6 +92,28 @@ export default function FoodDetails() {
                             </tbody> */}
                 </table>
             }
+            {/* Modal section */}
+            <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
+                <div className="modal-box">
+                    <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-full px-8 py-12 my-6 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
+                        <h1 className="text-2xl font-bold">Info Form</h1>
+                        <div className="w-full">
+                            {errors.phone ? <p className="text-sm text-rose-500">{errors.phone.message}</p> : <label htmlFor="phone">Phone :</label>}
+                            <input type="tel" {...register("phone", { required: "Phone number is required" })} placeholder="Enter your contact number" id="phone" />
+                        </div>
+                        <div className="w-full">
+                            {errors.location ? <p className="text-sm text-rose-500">{errors.location.message}</p> : <label htmlFor="location">Pickup location :</label>}
+                            <input type="text" {...register("location", { required: "Location is required" })} placeholder="Enter location" id="location" />
+                        </div>
+                        <div className="w-full">
+                            {errors.reason ? <p className="text-sm text-rose-500">{errors.reason.message}</p> : <label htmlFor="reason">Reason :</label>}
+                            <textarea type="text" {...register("reason", { required: "Reason is required" })} placeholder="Write why you need this food" id="reason" />
+                        </div>
+                        <button disabled={isSubmitting} type="submit" className="btn trnsition mt-4">{isSubmitting ? "Requesting..." : "Request"}</button>
+                    </form>
+                </div>
+            </dialog>
+            {/* Modal section */}
         </main>
     )
 }

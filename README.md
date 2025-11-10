@@ -9,6 +9,7 @@ This is a food donation website that connect the needy people with the donator u
 - Axios
 - React Hook Form
 - Motion
+- DaisyUi
 ---
 [Preview Link - 1](https://plate-share-ae79a.web.app/)
 
