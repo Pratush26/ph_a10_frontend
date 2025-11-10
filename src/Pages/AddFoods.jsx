@@ -26,6 +26,7 @@ export default function AddFoodForm() {
                 additional_notes: data.additional_notes,
                 donator_name: user.displayName,
                 donator_email: user.email,
+                status: "available",
                 donator_image: user.photoURL
             }
             axios.post(`${import.meta.env.VITE_SERVER}/create-food`, dataObj).then(r => {
