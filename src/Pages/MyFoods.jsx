@@ -21,13 +21,15 @@ export default function MyFoodsPage() {
         })
     }, [user])
     return (
-        <main className="w-full">
+        <main className="w-full my-10">
             {
                 loading ?
+                <div className="w-fit mx-auto">
                     <Loader />
+                </div>
                     :
                     <table className="table-auto text-center text-sm font-medium border-collapse border border-gray-400 w-11/12 mx-auto rounded-md overflow-hidden">
-                        <caption className='text-4xl font-bold my-8'>My <span className='text-green-700'>Foods</span> : {data?.length}</caption>
+                        <caption className='text-4xl font-bold mb-8'>My <span className='text-green-700'>Foods</span> : {data?.length}</caption>
                         <thead>
                             <tr className="bg-gray-200">
                                 <th>SL no.</th>
