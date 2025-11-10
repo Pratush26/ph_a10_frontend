@@ -31,7 +31,16 @@ export default function FoodDetails() {
         modalRef.current.close()
         reset()
     }
-    console.log(requests)
+    const handleDonate = (id) => {
+        axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${id}`,{foodId: data._id}).then(res => {
+            console.log(res)
+        }).catch(err => console.error(err))
+    }
+    const handleReject = (id) => {
+        axios.delete(`${import.meta.env.VITE_SERVER}/delete-request/${id}`).then(res => {
+            console.log(res)
+        }).catch(err => console.error(err))
+    }
     return (
         <main className="w-full">
             <section className="grid grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
@@ -87,8 +96,8 @@ export default function FoodDetails() {
                                     <td className="font-semibold text-gray-700">{e.reason}</td>
                                     <td><span className={`${e.status === 'pending' ? "bg-yellow-600" : "bg-gray-600"} rounded-full px-4 text-white py-1 text-xs font-semibold`}>{e.status}</span></td>
                                     <td className="flex justify-center gap-2 flex-wrap">
-                                        <button className="btn trnsition">Accept</button>
-                                        <button className="btn-out trnsition hover:text-gray-500">Reject</button>
+                                        <button onClick={() => handleDonate(e._id)} className="btn trnsition">Accept</button>
+                                        <button onClick={() => handleReject(e._id)} className="btn-out trnsition hover:text-gray-500">Reject</button>
                                     </td>
                                 </tr>
                             )
