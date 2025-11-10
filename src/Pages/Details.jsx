@@ -4,10 +4,11 @@ import "../Utils/utility.css"
 import { useForm } from "react-hook-form";
 import { useContext, useRef } from "react";
 import { AuthContext } from "../Context/AuthContext";
+import axios from "axios";
 
 export default function FoodDetails() {
-    const {user} = useContext(AuthContext)
-    const { data } = useLoaderData()
+    const { user } = useContext(AuthContext)
+    const { data, requests } = useLoaderData()
     const modalRef = useRef(null);
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
     const handleModal = () => modalRef.current.showModal()
@@ -23,10 +24,14 @@ export default function FoodDetails() {
             status: "pending",
             food_id: data._id
         }
-        console.log(newObj)
+        axios.post(`${import.meta.env.VITE_SERVER}/request-food`, newObj).then(res => {
+            if (res.data.insertedId) console.log("sdf")
+            else console.log("sdsd")
+        }).catch(err => console.error(err))
         modalRef.current.close()
         reset()
     }
+    console.log(requests)
     return (
         <main className="w-full">
             <section className="grid grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
@@ -53,43 +58,43 @@ export default function FoodDetails() {
                 </article>
             </section>
             {
-                <table className="table-auto text-center text-sm font-medium border-collapse border border-gray-400 w-11/12 mx-auto rounded-md overflow-hidden">
-                    {/* <caption className='text-4xl font-bold my-8'>Foods Request : <span className="text-violet-600">{data?.bids?.length}</span></caption> */}
+                <table className="table-auto text-center text-sm my-8 font-medium border-collapse border border-gray-400 w-11/12 mx-auto rounded-md overflow-hidden">
+                    <caption className='text-4xl font-bold mb-8'>Foods Request : <span className="text-green-600">{requests?.length}</span></caption>
                     <thead>
                         <tr className="bg-gray-200">
                             <th>SL no.</th>
                             <th>Donator</th>
                             <th>Reason</th>
-                            <th>Quantity</th>
+                            {/* <th>Quantity</th> */}
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    {/* <tbody className="text-gray-800">
-                                {
-                                    data.map((e, i) => {
-                                        const p = data.products.find(f => f._id == e.product)
-                                        return (
-                                            <tr key={i} className="border border-gray-300 bg-white">
-                                                <td>{i + 1}</td>
-                                                <td>
-                                                    <div className="flex flex-wrap justify-center items-center gap-2">
-                                                        <ImgManager imgUrl={p.image} altTxt={"product Image"} styles={"h-16 w-auto rounded-sm object-center object-contain"} />
-                                                        <span>
-                                                            <p className="font-semibold text-sm">{p?.title}</p>
-                                                            <p className="text-xs">$ {p?.price_max} - {p?.price_min}</p>
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td>ff</td>
-                                                <td>fgd</td>
-                                                <td><span className={`${e.status === 'donated' ? "bg-green-700" : "bg-gray-600"} rounded-full px-4 text-white py-1 h-10`}>{e.status}</span></td>
-                                                <td>dfad</td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody> */}
+                    <tbody className="text-gray-800">
+                        {
+                            requests.map((e, i) => (
+                                <tr key={i} className="border border-gray-300 bg-white">
+                                    <td>{i + 1}</td>
+                                    <td>
+                                        <div className="flex flex-wrap justify-center text-start items-center gap-2">
+                                            <ImgManager imgUrl={e.image} altTxt={"product Image"} styles={"h-10 w-auto rounded-full object-center object-contain"} />
+                                            <span>
+                                                <p className="font-semibold text-sm">{e.name}</p>
+                                                <p className="text-gray-500 text-xs">{e.email}</p>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td className="font-semibold text-gray-700">{e.reason}</td>
+                                    <td><span className={`${e.status === 'pending' ? "bg-yellow-600" : "bg-gray-600"} rounded-full px-4 text-white py-1 text-xs font-semibold`}>{e.status}</span></td>
+                                    <td className="flex justify-center gap-2 flex-wrap">
+                                        <button className="btn trnsition">Accept</button>
+                                        <button className="btn-out trnsition hover:text-gray-500">Reject</button>
+                                    </td>
+                                </tr>
+                            )
+                            )
+                        }
+                    </tbody>
                 </table>
             }
             {/* Modal section */}

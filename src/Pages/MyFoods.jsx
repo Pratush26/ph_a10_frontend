@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import FoodCard from "../Components/FoodCard";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import ImgManager from "../Components/ImgManager";
 import Loader from "../Components/Loader";
+import "../Utils/utility.css"
 
 export default function MyFoodsPage() {
     const [loading, setLoading] = useState(true)
