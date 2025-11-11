@@ -38,7 +38,7 @@ export default function MyFoodsPage() {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`${import.meta.env.VITE_SERVER}/delete-food/${info._id}`,{
+                axios.delete(`${import.meta.env.VITE_SERVER}/delete-food/${info._id}`, {
                     headers: {
                         Authorization: `Bearer ${user?.accessToken}`
                     }
@@ -70,7 +70,6 @@ export default function MyFoodsPage() {
                                 <tr className="bg-gray-200">
                                     <th>SL no.</th>
                                     <th>Product</th>
-                                    <th>Quantity</th>
                                     <th>Expire Date</th>
                                     <th>Requests</th>
                                     <th>Action</th>
@@ -84,12 +83,12 @@ export default function MyFoodsPage() {
                                             <td>
                                                 <div className="flex flex-wrap justify-center items-center gap-2">
                                                     <ImgManager imgUrl={e.image} altTxt={"food Image"} styles={"h-10 w-auto rounded-sm object-center object-contain"} />
-                                                    <span>
+                                                    <span className="text-start">
                                                         <p className="font-semibold text-sm">{e.name}</p>
+                                                        <p className="text-xs text-gray-600">{e.quantity}</p>
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td>{e.quantity}</td>
                                             <td>{new Date(e.expire_date).toLocaleDateString()}</td>
                                             <td>dsafsd</td>
                                             <td className="flex justify-center gap-2 flex-wrap">

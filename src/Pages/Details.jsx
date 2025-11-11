@@ -2,18 +2,36 @@ import { useLoaderData } from "react-router";
 import ImgManager from "../Components/ImgManager";
 import "../Utils/utility.css"
 import { useForm } from "react-hook-form";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import Loader from "../Components/Loader";
+import Error from "../Components/Error";
 
 export default function FoodDetails() {
+    const [reqData, setReqData] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [errMsg, setErrMsg] = useState(null)
+    const [refresh, setRefresh] = useState(false)
     const { user } = useContext(AuthContext)
-    const { data, requests } = useLoaderData()
+    const { data } = useLoaderData()
     const modalRef = useRef(null);
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
     const handleModal = () => modalRef.current.showModal()
+    
+    useEffect(() => {
+        axios(`${import.meta.env.VITE_SERVER}/food-requests/${data._id}`).then(res => {
+            setReqData(res.data)
+            setErrMsg(null)
+            setLoading(false)
+        }).catch(err => {
+            setErrMsg(err.message)
+            setLoading(false)
+        })
+    }, [user, refresh, data])
+    
     const onSubmit = (d) => {
         const newObj = {
             location: d.location,
@@ -27,12 +45,16 @@ export default function FoodDetails() {
             food_id: data._id
         }
         axios.post(`${import.meta.env.VITE_SERVER}/request-food`, newObj).then(res => {
-            if (res.data.insertedId) toast.success(`Successfully requested for ${data.name}`)
+            if (res.data.insertedId) {
+                toast.success(`Successfully requested for ${data.name}`)
+                setRefresh(!refresh)
+            }
             else toast.error(res.data)
         }).catch(err => toast.error(err))
         modalRef.current.close()
         reset()
     }
+
     const handleDonate = (info) => {
         Swal.fire({
             title: "Are you sure?",
@@ -50,10 +72,12 @@ export default function FoodDetails() {
                         text: `Successfully donated the ${data.name} to ${info.name}`,
                         icon: "success"
                     });
+                    setRefresh(!refresh)
                 }).catch(err => toast.error(err))
             }
         });
     }
+    
     const handleReject = (info) => {
         Swal.fire({
             title: "Are you sure?",
@@ -71,10 +95,12 @@ export default function FoodDetails() {
                         text: `Successfully deleted ${info.name}'s food request`,
                         icon: "success"
                     });
+                    setRefresh(!refresh)
                 }).catch(err => toast.error(err))
             }
         });
     }
+
     return (
         <main className="w-full">
             <section className="grid grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
@@ -101,44 +127,54 @@ export default function FoodDetails() {
                 </article>
             </section>
             {
-                <table className="table-auto text-center text-sm my-8 font-medium border-collapse border border-gray-400 w-11/12 mx-auto rounded-md overflow-hidden">
-                    <caption className='text-4xl font-bold mb-8'>Foods Request : <span className="text-green-600">{requests?.length}</span></caption>
-                    <thead>
-                        <tr className="bg-gray-200">
-                            <th>SL no.</th>
-                            <th>Donator</th>
-                            <th>Reason</th>
-                            {/* <th>Quantity</th> */}
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody className="text-gray-800">
-                        {
-                            requests.map((e, i) => (
-                                <tr key={i} className="border border-gray-300 bg-white">
-                                    <td>{i + 1}</td>
-                                    <td>
-                                        <div className="flex flex-wrap justify-center text-start items-center gap-2">
-                                            <ImgManager imgUrl={e.image} altTxt={"product Image"} styles={"h-10 aspect-square rounded-full object-center object-contain"} />
-                                            <span>
-                                                <p className="font-semibold text-sm">{e.name}</p>
-                                                <p className="text-gray-500 text-xs">{e.email}</p>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td className="font-semibold text-gray-700">{e.reason}</td>
-                                    <td><span className={`${e.status === 'pending' ? "bg-yellow-600" : "bg-gray-600"} rounded-full px-4 text-white py-1 text-xs font-semibold`}>{e.status}</span></td>
-                                    <td className="flex justify-center gap-2 flex-wrap">
-                                        <button onClick={() => handleDonate(e)} className="btn trnsition">Accept</button>
-                                        <button onClick={() => handleReject(e)} className="btn-out trnsition hover:text-gray-500">Reject</button>
-                                    </td>
+                user?.email === data.donator_email
+                &&
+                (loading ?
+                    <div className="w-fit mx-auto">
+                        <Loader />
+                    </div>
+                    :
+                    errMsg ?
+                        <Error msg={errMsg} />
+                        :
+                        <table className="table-auto text-center text-sm my-8 font-medium border-collapse border border-gray-400 w-11/12 mx-auto rounded-md overflow-hidden">
+                            <caption className='text-4xl font-bold mb-8'>Foods Request : <span className="text-green-600">{reqData?.length}</span></caption>
+                            <thead>
+                                <tr className="bg-gray-200">
+                                    <th>SL no.</th>
+                                    <th>Donator</th>
+                                    <th>Reason</th>
+                                    {/* <th>Quantity</th> */}
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
-                            )
-                            )
-                        }
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody className="text-gray-800">
+                                {
+                                    reqData.map((e, i) => (
+                                        <tr key={i} className="border border-gray-300 bg-white">
+                                            <td>{i + 1}</td>
+                                            <td>
+                                                <div className="flex flex-wrap justify-center text-start items-center gap-2">
+                                                    <ImgManager imgUrl={e.image} altTxt={"product Image"} styles={"h-10 aspect-square rounded-full object-center object-contain"} />
+                                                    <span>
+                                                        <p className="font-semibold text-sm">{e.name}</p>
+                                                        <p className="text-gray-500 text-xs">{e.email}</p>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="font-semibold text-gray-700">{e.reason}</td>
+                                            <td><span className={`${e.status === 'pending' ? "bg-yellow-600" : "bg-gray-600"} rounded-full px-4 text-white py-1 text-xs font-semibold`}>{e.status}</span></td>
+                                            <td className="flex justify-center gap-2 flex-wrap">
+                                                <button onClick={() => handleDonate(e)} className="btn trnsition">Accept</button>
+                                                <button onClick={() => handleReject(e)} className="btn-out trnsition hover:text-gray-500">Reject</button>
+                                            </td>
+                                        </tr>
+                                    )
+                                    )
+                                }
+                            </tbody>
+                        </table>)
             }
             {/* Modal section */}
             <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">

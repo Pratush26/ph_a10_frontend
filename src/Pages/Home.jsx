@@ -1,9 +1,12 @@
 import { Link, useLoaderData } from 'react-router'
 import '../Utils/utility.css'
 import FoodCard from '../Components/FoodCard'
+import { useContext } from 'react'
+import { AuthContext } from '../Context/AuthContext'
 
 export default function HomePage() {
     const { data } = useLoaderData()
+    const {user} = useContext(AuthContext)
     return (
         <main className="w-full">
             <section id="hero" className="w-full relative min-h-[80vh] z-10 grid grid-cols-2 items-center-safe text-white">
@@ -20,8 +23,8 @@ export default function HomePage() {
                         <li>820 Million People Go Hungry Daily</li>
                     </ul>
                     <div className="flex gap-4">
-                        <button className="btn border-none trnsition shadow-none">View All Foods</button>
-                        <button className='btn-out hover:text-gray-300 trnsition'>Become a Volunteer</button>
+                        <Link to='/all-foods' className="btn border-none trnsition shadow-none">View All Foods</Link>
+                        {!user && <Link to='/register' className='btn-out hover:text-gray-300 trnsition'>Become a Volunteer</Link>}
                     </div>
                 </div>
             </section>
