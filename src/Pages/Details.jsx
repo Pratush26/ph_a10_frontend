@@ -22,7 +22,7 @@ export default function FoodDetails() {
     const handleModal = () => modalRef.current.showModal()
     
     useEffect(() => {
-        axios(`${import.meta.env.VITE_SERVER}/food-requests/${data._id}`).then(res => {
+        axios(`${import.meta.env.VITE_SERVER}/food-requestsById/${data._id}`).then(res => {
             setReqData(res.data)
             setErrMsg(null)
             setLoading(false)
@@ -42,7 +42,8 @@ export default function FoodDetails() {
             name: user.displayName,
             image: user.photoURL,
             status: "pending",
-            food_id: data._id
+            food_id: data._id,
+            donator_email: data.donator_email
         }
         axios.post(`${import.meta.env.VITE_SERVER}/request-food`, newObj).then(res => {
             if (res.data.insertedId) {

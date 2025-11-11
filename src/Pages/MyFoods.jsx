@@ -14,12 +14,21 @@ export default function MyFoodsPage() {
     const [errMsg, setErrMsg] = useState(null)
     const { user } = useContext(AuthContext)
     const [data, setData] = useState([])
+    const [foodReq, setFoodReq] = useState([])
     const [refresh, setRefresh] = useState(false)
     useEffect(() => {
         axios(`${import.meta.env.VITE_SERVER}/my-foods/${user?.email}`, {
             headers: { Authorization: `Bearer ${user?.accessToken}` }
         }).then(res => {
             setData(res.data)
+            setErrMsg(null)
+            setLoading(false)
+        }).catch(err => {
+            setErrMsg(err.message)
+            setLoading(false)
+        })
+        axios(`${import.meta.env.VITE_SERVER}/food-requestsByEmail/${user?.email}`).then(res => {
+            setFoodReq(res.data)
             setErrMsg(null)
             setLoading(false)
         }).catch(err => {
@@ -90,7 +99,7 @@ export default function MyFoodsPage() {
                                                 </div>
                                             </td>
                                             <td>{new Date(e.expire_date).toLocaleDateString()}</td>
-                                            <td>dsafsd</td>
+                                            <td>{foodReq.filter(c => c.food_id === e._id).length}</td>
                                             <td className="flex justify-center gap-2 flex-wrap">
                                                 <Link to="/update-food" state={e} className="btn trnsition">Update</Link>
                                                 <button onClick={() => handleDelete(e)} className="btn-out trnsition hover:text-gray-500">Delete</button>
