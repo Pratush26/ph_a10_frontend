@@ -32,7 +32,7 @@ export default function AddFoodForm() {
         }).catch((er) => toast.error(er));
     }
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-1/2 shadow-lg/50 shadow-gray-800 px-8 py-12 my-6 mx-2 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-full sm:w-3/4 md:w-2/3 lg:w-1/2 shadow-lg/50 shadow-gray-800 px-8 py-12 my-6 sm:mx-2 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
             <h1 className="text-2xl font-semibold">Add Food</h1>
             <div className="w-full">
                 {errors.foodName ? <p className="text-sm text-rose-500">{errors.foodName.message}</p> : <label htmlFor="foodName">Name :</label>}

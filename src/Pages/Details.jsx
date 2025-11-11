@@ -104,9 +104,9 @@ export default function FoodDetails() {
 
     return (
         <main className="w-full">
-            <section className="grid grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
+            <section className="grid grid-cols-1 md:grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
                 <ImgManager imgUrl={data.image} altTxt="food image" styles="rounded-lg" />
-                <article className="space-y-3">
+                <article className="space-y-5">
                     <h1 className="text-4xl font-semibold">{data.name}</h1>
                     <div className="flex items-center-safe justify-between gap-2 text-sm text-gray-600">
                         <p>Expire Date : {new Date(data.expire_date).toLocaleDateString()}</p>
@@ -180,7 +180,7 @@ export default function FoodDetails() {
             {/* Modal section */}
             <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
-                    <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-full px-8 py-12 my-6 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
+                    <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-full sm:px-8 py-12 my-6 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
                         <h1 className="text-2xl font-bold">Info Form</h1>
                         <div className="w-full">
                             {errors.phone ? <p className="text-sm text-rose-500">{errors.phone.message}</p> : <label htmlFor="phone">Phone :</label>}

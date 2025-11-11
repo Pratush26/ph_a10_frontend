@@ -57,9 +57,7 @@ export default function Navbar() {
                 {
                     isOpened
                     &&
-                    (loading ?
-                        <Loader />
-                        :
+                    (
                         user ?
                             <section className="flex text-sm relative gap-2">
                                 <div className={`bg-white absolute w-full text-start bottom-0 translate-y-full z-100 flex flex-col gap-3 px-5 py-3`}>

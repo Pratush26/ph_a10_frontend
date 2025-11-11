@@ -13,6 +13,7 @@ import AddFoodForm from "../Pages/AddFoods";
 import NotFoundPage from "../Pages/NotFound";
 import ErrorPage from "../Layouts/ErrorPage";
 import UpdateFoodPage from "../Pages/UpdateFood";
+import MyRequestsPage from "../Pages/MyRequests";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
         {
             path: '/my-foods',
             element: <PrivateRoute><MyFoodsPage /></PrivateRoute>
+        },
+        {
+            path: '/my-requests',
+            element: <PrivateRoute><MyRequestsPage /></PrivateRoute>
         },
         {
             path: '/add-food',

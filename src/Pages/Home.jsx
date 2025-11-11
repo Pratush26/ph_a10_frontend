@@ -6,12 +6,14 @@ import { AuthContext } from '../Context/AuthContext'
 
 export default function HomePage() {
     const { data } = useLoaderData()
-    const {user} = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
     return (
-        <main className="w-full">
-            <section id="hero" className="w-full relative min-h-[80vh] z-10 grid grid-cols-2 items-center-safe text-white">
+        <main className="w-full">9
+            <section id="hero" className="w-full relative min-h-[50vh] lg:min-h-[80vh] 2xl:min-h-screen z-10 grid grid-cols-1 md:grid-cols-2 p-6 items-center-safe text-white">
                 <div className="w-full min-h-full absolute z-3 mix-blend-darken bg-linear-to-r from-transparent from-10% via-gray-600 via-30% to-black"></div>
-                <span id="banner" className='w-3/4 min-h-full absolute z-1'></span>
+                <img src="https://images.unsplash.com/photo-1562709902-31c9a3b1ad5c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1031"
+                 alt="banner image"
+                 className='absolute h-full min-w-3/4 object-cover' />
                 <div></div>
                 <div className="relative z-10 w-11/12 space-y-3">
                     <h1 className="text-3xl font-bold">Turn Surplus Food into Hope for Those in Need</h1>
@@ -33,7 +35,7 @@ export default function HomePage() {
                     <h2 className='text-5xl font-bold'>Featured <span className='text-green-700'>Foods</span></h2>
                     <p className='text-sm font-medium text-gray-800 my-10'>Discover our selection of the freshest food donations with the longest remaining shelf life. These items have been carefully chosen for their extended expiration dates, ensuring maximum freshness and quality. Perfect for immediate distribution to those in need or for planned community meal programs.</p>
                 </div>
-                <div className='grid grid-cols-3 place-content-center gap-3 w-11/12 mx-auto my-10'>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-content-center gap-3 w-11/12 mx-auto my-10'>
                     {data.map(e => <FoodCard e={e} key={e._id} />)}
                 </div>
                 <div className='w-fit mx-auto mb-6'>
@@ -45,8 +47,8 @@ export default function HomePage() {
                 <p className='font-medium text-gray-800 my-3'>Join our mission to reduce food waste and fight hunger with three simple steps.
                     Our platform connects food donors with those in need, creating a sustainable
                     solution for your surplus food.</p>
-                <div className='grid grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto'>
-                    <article>
+                <div className='grid grid-cols-1 md:grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10'>
+                    <article className='order-2 md:order-1'>
                         <h4 className='font-semibold mt-4 mb-1'>1. Post Your Food</h4>
                         <p className='text-sm font-medium pl-5 text-gray-500'>
                             Share details about your surplus food - include photos, quantity,
@@ -63,7 +65,7 @@ export default function HomePage() {
                             distribute it to those in need or use it for your community.
                         </p>
                     </article>
-                    <img src="https://images.unsplash.com/photo-1423483641154-5411ec9c0ddf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870" alt="donation image" className='rounded-lg w-full h-auto' />
+                    <img src="https://images.unsplash.com/photo-1423483641154-5411ec9c0ddf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870" alt="donation image" className='rounded-lg w-full h-auto order-1 md:order-2' />
                 </div>
             </section>
             <section className='w-11/12 mx-auto text-center my-24'>
@@ -72,7 +74,7 @@ export default function HomePage() {
                     Our platform bridges the gap between surplus and scarcity, creating a sustainable
                     solution that nourishes people while protecting our planet.
                 </p>
-                <section className='grid grid-cols-3 place-content-center gap-3 w-11/12 mx-auto my-10'>
+                <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-content-center gap-3 w-11/12 mx-auto my-10'>
                     <div className='bg-white rounded-md px-8 py-10 text-sm'>
                         <p className='text-xl font-medium'>🌱 Reduce Waste</p>
                         <p>Rescue perfectly good food from landfills</p>
@@ -99,7 +101,7 @@ export default function HomePage() {
                     </div>
                 </section>
                 <h4 className='text-3xl font-bold my-5'>About Our Work</h4>
-                <section className='grid grid-cols-3 place-content-center gap-3 w-11/12 mx-auto my-10'>
+                <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-content-center gap-3 w-11/12 mx-auto my-10'>
                     <div className='bg-white rounded-md px-8 py-10 text-sm'>
                         <p className='text-xl font-medium'>Mission</p>
                         <p>To create a world where surplus food becomes a solution to hunger, not waste.
