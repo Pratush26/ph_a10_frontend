@@ -3,18 +3,33 @@ import { useForm } from "react-hook-form"
 import { AuthContext } from "../Context/AuthContext"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { Navigate, useLocation } from "react-router"
 
 
-export default function AddFoodForm() {
+export default function UpdateFoodPage() {
     const { user } = useContext(AuthContext)
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
-    const onSubmit = (data) => {
-        const formData = new FormData();
-        formData.append("image", data.image[0]);
-        axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMG_BB_KEY}`, formData).then((res) => {
+    const { state } = useLocation()
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+        defaultValues: {
+            ...state,
+            foodName: state.name,
+            image: null,
+            expire_date: new Date(state.expire_date).toISOString().split('T')[0]
+        }
+    })
+    if (state?.donator_email !== user?.email) return <Navigate to='/' />
+    const onSubmit = async (data) => {
+        try {
+            let imageUrl = state.image;
+            if (data.image) {
+                const formData = new FormData();
+                formData.append("image", data.image[0]);
+                const imgbbResponse = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMG_BB_KEY}`, formData);
+                imageUrl = imgbbResponse.data.data.display_url;
+            }
             const dataObj = {
                 name: data.foodName,
-                image: res.data.data.display_url,
+                image: imageUrl,
                 quantity: data.quantity,
                 pickup_location: data.pickup_location,
                 expire_date: new Date(data.expire_date).toISOString(),
@@ -23,14 +38,20 @@ export default function AddFoodForm() {
                 donator_email: user.email,
                 status: "available",
                 donator_image: user.photoURL
+            };
+            const response = await axios.put(
+                `${import.meta.env.VITE_SERVER}/update-food/${state._id}`, dataObj, {
+                headers: { Authorization: `Bearer ${user?.accessToken}` }
             }
-            axios.post(`${import.meta.env.VITE_SERVER}/create-food`, dataObj).then(r => {
-                if (r.data.insertedId) toast.success("Successfully created food info")
-                else toast.error("some wrong")
-                reset()
-            }).catch(err => toast.error(err))
-        }).catch((er) => toast.error(er));
-    }
+            );
+            if (response.data.modifiedCount > 0) toast.success("Successfully updated food info");
+            else toast.info("No changes made");
+
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to update food");
+            console.error(error);
+        }
+    };
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-1/2 shadow-lg/50 shadow-gray-800 px-8 py-12 my-6 mx-2 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
             <h1 className="text-2xl font-semibold">Add Food</h1>
@@ -56,9 +77,9 @@ export default function AddFoodForm() {
             </div>
             <div className="w-full">
                 {errors.image ? <p className="text-sm text-rose-500">{errors.image.message}</p> : <label htmlFor="image">Image :</label>}
-                <input type="file" {...register("image", { required: "image is required" })} placeholder="Enter image url" id="image" />
+                <input type="file" {...register("image")} placeholder="Enter image url" id="image" />
             </div>
-            <button disabled={isSubmitting} type="submit" className="btn trnsition mt-4">{isSubmitting ? "Adding..." : "Add"}</button>
+            <button disabled={isSubmitting} type="submit" className="btn trnsition mt-4">{isSubmitting ? "Updating..." : "Update"}</button>
         </form>
     )
 }

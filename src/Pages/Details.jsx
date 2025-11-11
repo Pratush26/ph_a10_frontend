@@ -6,6 +6,7 @@ import { useContext, useRef } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 export default function FoodDetails() {
     const { user } = useContext(AuthContext)
@@ -27,20 +28,52 @@ export default function FoodDetails() {
         }
         axios.post(`${import.meta.env.VITE_SERVER}/request-food`, newObj).then(res => {
             if (res.data.insertedId) toast.success(`Successfully requested for ${data.name}`)
-            else toast.error("Something went wrong!")
+            else toast.error(res.data)
         }).catch(err => toast.error(err))
         modalRef.current.close()
         reset()
     }
     const handleDonate = (info) => {
-        axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${info._id}`, { foodId: data._id }).then(() => {
-            toast.success(`Successfully donated the ${data.name} to ${info.name}`)
-        }).catch(err => toast.error(err))
+        Swal.fire({
+            title: "Are you sure?",
+            text: `Do you want to donated the ${data.name} to ${info.name}?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, donate it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${info._id}`, { foodId: data._id }).then(() => {
+                    Swal.fire({
+                        title: "Donated!",
+                        text: `Successfully donated the ${data.name} to ${info.name}`,
+                        icon: "success"
+                    });
+                }).catch(err => toast.error(err))
+            }
+        });
     }
     const handleReject = (info) => {
-        axios.delete(`${import.meta.env.VITE_SERVER}/delete-request/${info._id}`).then(() => {
-            toast.success(`Successfully deleted ${info.name}'s food request`)
-        }).catch(err => toast.error(err))
+        Swal.fire({
+            title: "Are you sure?",
+            text: `Do you want to delete ${info.name}'s food request?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${import.meta.env.VITE_SERVER}/delete-request/${info._id}`).then(() => {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: `Successfully deleted ${info.name}'s food request`,
+                        icon: "success"
+                    });
+                }).catch(err => toast.error(err))
+            }
+        });
     }
     return (
         <main className="w-full">

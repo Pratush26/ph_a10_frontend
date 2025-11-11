@@ -5,12 +5,16 @@ import ImgManager from "../Components/ImgManager";
 import Loader from "../Components/Loader";
 import "../Utils/utility.css"
 import Error from "../Components/Error";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import { Link } from "react-router";
 
 export default function MyFoodsPage() {
     const [loading, setLoading] = useState(true)
     const [errMsg, setErrMsg] = useState(null)
     const { user } = useContext(AuthContext)
     const [data, setData] = useState([])
+    const [refresh, setRefresh] = useState(false)
     useEffect(() => {
         axios(`${import.meta.env.VITE_SERVER}/my-foods/${user?.email}`, {
             headers: { Authorization: `Bearer ${user?.accessToken}` }
@@ -22,7 +26,33 @@ export default function MyFoodsPage() {
             setErrMsg(err.message)
             setLoading(false)
         })
-    }, [user])
+    }, [user, refresh])
+    const handleDelete = (info) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: `Do you want to delete ${info.name}?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`${import.meta.env.VITE_SERVER}/delete-food/${info._id}`,{
+                    headers: {
+                        Authorization: `Bearer ${user?.accessToken}`
+                    }
+                }).then(() => {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: `Successfully deleted ${info.name}`,
+                        icon: "success"
+                    });
+                    setRefresh(!refresh)
+                }).catch(err => toast.error(err))
+            }
+        });
+    }
     return (
         <main className="w-full my-10">
             {
@@ -63,8 +93,8 @@ export default function MyFoodsPage() {
                                             <td>{new Date(e.expire_date).toLocaleDateString()}</td>
                                             <td>dsafsd</td>
                                             <td className="flex justify-center gap-2 flex-wrap">
-                                                <button className="btn trnsition">Update</button>
-                                                <button className="btn-out trnsition">Delete</button>
+                                                <Link to="/update-food" state={e} className="btn trnsition">Update</Link>
+                                                <button onClick={() => handleDelete(e)} className="btn-out trnsition hover:text-gray-500">Delete</button>
                                             </td>
                                         </tr>
                                     )

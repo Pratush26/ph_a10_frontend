@@ -12,6 +12,7 @@ import PrivateRoute from "../Utils/PrivateRoute";
 import AddFoodForm from "../Pages/AddFoods";
 import NotFoundPage from "../Pages/NotFound";
 import ErrorPage from "../Layouts/ErrorPage";
+import UpdateFoodPage from "../Pages/UpdateFood";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
                 return {data: food.data, requests: requests.data}
             },
             element: <PrivateRoute><FoodDetails /></PrivateRoute>
+        },
+        {
+            path: '/update-food',
+            element: <PrivateRoute><UpdateFoodPage /></PrivateRoute>
         },
         {
             path: '/register',
