@@ -4,6 +4,7 @@ import { FcGoogle } from "react-icons/fc"
 import { AuthContext } from "../Context/AuthContext"
 import { Link, useLocation, useNavigate } from "react-router"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
+import { toast } from "react-toastify"
 
 
 export default function LoginPage() {
@@ -16,13 +17,16 @@ export default function LoginPage() {
 
     const onSubmit = (data) => {
         sigInUser(data.email, data.password).then(() => {
-            console.log("res")
+            toast.success("Login Successful")
             reset()
-        }).catch(err => console.error(err))
+        }).catch(err => toast.error(err))
     }
     
     const handleGoogleLogin = () => {
-        googleSignIn().then(() => navigate(state || "/")).catch(err => console.error(err))
+        googleSignIn().then(() => {
+            toast.success("Login Successful")
+            navigate(state || "/")
+        }).catch(err => toast.error(err))
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-1/2 shadow-lg/50 shadow-gray-800 px-8 py-12 my-6 mx-2 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >

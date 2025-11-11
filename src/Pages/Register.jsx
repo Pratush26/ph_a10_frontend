@@ -5,6 +5,7 @@ import { AuthContext } from "../Context/AuthContext"
 import { Link, Navigate, useLocation, useNavigate } from "react-router"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 
 export default function RegistrationPage() {
@@ -21,15 +22,18 @@ export default function RegistrationPage() {
         axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMG_BB_KEY}`, formData).then((res) => {
             createUser(data.email, data.password).then(() => {
                 updateUser(data.name, res.data.data.display_url).then(() => {
-                    console.log("D")
+                    toast.success("Registration Successful")
                     reset()
-                }).catch(err => console.error(err))
-            }).catch(e => console.error(e))
-        }).catch((er) => console.error(er));
+                }).catch(err => toast.error(err))
+            }).catch(e => toast.error(e))
+        }).catch((er) => toast.error(er));
     }
 
     const handleGoogleLogin = () => {
-        googleSignIn().then(() => navigate(state || "/")).catch(err => console.error(err))
+        googleSignIn().then(() => {
+            toast.success("Login Successful")
+            navigate(state || "/")
+        }).catch(err => toast.error(err))
     }
 
     return (

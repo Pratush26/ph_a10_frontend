@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useContext, useRef } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function FoodDetails() {
     const { user } = useContext(AuthContext)
@@ -25,21 +26,21 @@ export default function FoodDetails() {
             food_id: data._id
         }
         axios.post(`${import.meta.env.VITE_SERVER}/request-food`, newObj).then(res => {
-            if (res.data.insertedId) console.log("sdf")
-            else console.log("sdsd")
-        }).catch(err => console.error(err))
+            if (res.data.insertedId) toast.success(`Successfully requested for ${data.name}`)
+            else toast.error("Something went wrong!")
+        }).catch(err => toast.error(err))
         modalRef.current.close()
         reset()
     }
-    const handleDonate = (id) => {
-        axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${id}`, { foodId: data._id }).then(res => {
-            console.log(res)
-        }).catch(err => console.error(err))
+    const handleDonate = (info) => {
+        axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${info._id}`, { foodId: data._id }).then(() => {
+            toast.success(`Successfully donated the ${data.name} to ${info.name}`)
+        }).catch(err => toast.error(err))
     }
-    const handleReject = (id) => {
-        axios.delete(`${import.meta.env.VITE_SERVER}/delete-request/${id}`).then(res => {
-            console.log(res)
-        }).catch(err => console.error(err))
+    const handleReject = (info) => {
+        axios.delete(`${import.meta.env.VITE_SERVER}/delete-request/${info._id}`).then(() => {
+            toast.success(`Successfully deleted ${info.name}'s food request`)
+        }).catch(err => toast.error(err))
     }
     return (
         <main className="w-full">
@@ -86,7 +87,7 @@ export default function FoodDetails() {
                                     <td>{i + 1}</td>
                                     <td>
                                         <div className="flex flex-wrap justify-center text-start items-center gap-2">
-                                            <ImgManager imgUrl={e.image} altTxt={"product Image"} styles={"h-10 w-auto rounded-full object-center object-contain"} />
+                                            <ImgManager imgUrl={e.image} altTxt={"product Image"} styles={"h-10 aspect-square rounded-full object-center object-contain"} />
                                             <span>
                                                 <p className="font-semibold text-sm">{e.name}</p>
                                                 <p className="text-gray-500 text-xs">{e.email}</p>
@@ -96,8 +97,8 @@ export default function FoodDetails() {
                                     <td className="font-semibold text-gray-700">{e.reason}</td>
                                     <td><span className={`${e.status === 'pending' ? "bg-yellow-600" : "bg-gray-600"} rounded-full px-4 text-white py-1 text-xs font-semibold`}>{e.status}</span></td>
                                     <td className="flex justify-center gap-2 flex-wrap">
-                                        <button onClick={() => handleDonate(e._id)} className="btn trnsition">Accept</button>
-                                        <button onClick={() => handleReject(e._id)} className="btn-out trnsition hover:text-gray-500">Reject</button>
+                                        <button onClick={() => handleDonate(e)} className="btn trnsition">Accept</button>
+                                        <button onClick={() => handleReject(e)} className="btn-out trnsition hover:text-gray-500">Reject</button>
                                     </td>
                                 </tr>
                             )

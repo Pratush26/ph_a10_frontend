@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import { FcGoogle } from "react-icons/fc"
 import { AuthContext } from "../Context/AuthContext"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 
 export default function AddFoodForm() {
@@ -25,11 +26,11 @@ export default function AddFoodForm() {
                 donator_image: user.photoURL
             }
             axios.post(`${import.meta.env.VITE_SERVER}/create-food`, dataObj).then(r => {
-                if (r.data.insertedId) console.log("sdu")
-                else console.log("some wrong")
+                if (r.data.insertedId) toast.success("Successfully created food info")
+                else toast.error("some wrong")
                 reset()
-            }).catch(err => console.error(err))
-        }).catch((er) => console.error(er));
+            }).catch(err => toast.error(err))
+        }).catch((er) => toast.error(er));
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-1/2 shadow-lg/50 shadow-gray-800 px-8 py-12 my-6 mx-2 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >

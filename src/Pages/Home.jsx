@@ -4,7 +4,6 @@ import FoodCard from '../Components/FoodCard'
 
 export default function HomePage() {
     const { data } = useLoaderData()
-    console.log(data)
     return (
         <main className="w-full">
             <section id="hero" className="w-full relative min-h-[80vh] z-10 grid grid-cols-2 items-center-safe text-white">
