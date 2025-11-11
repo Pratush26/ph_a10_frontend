@@ -32,7 +32,7 @@ export default function FoodDetails() {
         reset()
     }
     const handleDonate = (id) => {
-        axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${id}`,{foodId: data._id}).then(res => {
+        axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${id}`, { foodId: data._id }).then(res => {
             console.log(res)
         }).catch(err => console.error(err))
     }

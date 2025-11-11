@@ -10,11 +10,14 @@ import FoodDetails from "../Pages/Details";
 import LoadingPage from "../Layouts/Loading";
 import PrivateRoute from "../Utils/PrivateRoute";
 import AddFoodForm from "../Pages/AddFoods";
+import NotFoundPage from "../Pages/NotFound";
+import ErrorPage from "../Layouts/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     hydrateFallbackElement: <LoadingPage />,
+    errorElement: <ErrorPage />,
     Component: App,
     children: [
         {
@@ -52,6 +55,10 @@ export const router = createBrowserRouter([
             path: '/login',
             Component: LoginPage
         },
+        {
+            path: '*',
+            Component: NotFoundPage
+        }
     ]
   },
 ]);
