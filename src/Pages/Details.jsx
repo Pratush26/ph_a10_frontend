@@ -11,6 +11,7 @@ import Loader from "../Components/Loader";
 import Error from "../Components/Error";
 import useFetchData from "../Hooks/useFetch";
 import { RxCross2 } from "react-icons/rx";
+import { motion } from "motion/react";
 
 export default function FoodDetails() {
     const { pathname } = useLocation()
@@ -110,8 +111,17 @@ export default function FoodDetails() {
                         <Error msg={foodError} />
                         :
                         <section className="grid grid-cols-1 md:grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
-                            <ImgManager imgUrl={data.image} altTxt="food image" styles="rounded-lg" />
-                            <article className="space-y-5">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.7, x: -100 }}
+                                animate={{ opacity: 1, scale: 1, x: 0 }}
+                                transition={{ duration: 0.5 }}>
+                                <ImgManager imgUrl={data.image} altTxt="food image" styles="rounded-lg" />
+                            </motion.div>
+                            <motion.article 
+                            initial={{ opacity: 0, scale: 0.7, x: 100 }}
+                                animate={{ opacity: 1, scale: 1, x: 0 }}
+                                transition={{ duration: 0.5 }}
+                            className="space-y-5">
                                 <h1 className="text-4xl font-semibold">{data.name}</h1>
                                 <div className="flex items-center-safe justify-between gap-2 text-sm text-gray-600">
                                     <p>Expire Date : {new Date(data.expire_date).toLocaleDateString()}</p>
@@ -130,7 +140,7 @@ export default function FoodDetails() {
                                 <hr />
                                 <p>{data.additional_notes}</p>
                                 <button onClick={handleModal} className="btn trnsition">Request Food</button>
-                            </article>
+                            </motion.article>
                         </section>
             }
             {
