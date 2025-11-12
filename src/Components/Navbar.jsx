@@ -33,7 +33,7 @@ export default function Navbar() {
                             <section className="hidden sm:flex relative gap-2"
                                 onMouseLeave={() => setIsHover(false)}
                                 onMouseEnter={() => setIsHover(true)}>
-                                <img src={user?.photoURL} className="rounded-full object-center object-cover h-9 aspect-square" alt="user" />
+                                <img src={user?.photoURL} className="rounded-full object-center object-cover h-7 aspect-square" alt="user" />
                                 <div className="flex gap-2 items-center">
                                     <p>{user?.displayName}</p>
                                     <IoIosArrowDown />

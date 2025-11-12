@@ -1,10 +1,15 @@
 import { Link } from "react-router";
 import ImgManager from "./ImgManager";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { motion } from "motion/react";
 
 export default function FoodCard({ e }) {
     return (
-        <section className="rounded-lg flex flex-col justify-between gap-2 p-4 shadow-lg/50 border border-gray-300 shadow-gray-600">
+        <motion.section
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="rounded-lg flex flex-col justify-between gap-2 p-4 shadow-lg/50 border border-gray-300 shadow-gray-600">
             <div>
                 <span className="flex items-center-safe gap-2 font-semibold">
                     <ImgManager imgUrl={e.donator_image} altTxt="Donator Image" styles="h-9 aspect-square object-center object-cover rounded-full" />
@@ -19,6 +24,6 @@ export default function FoodCard({ e }) {
                 <p>Quantity : {e.quantity}</p>
             </article>
             <Link to={`/food/details/${e._id}`} className="italic hover:underline flex items-center w-fit">view details <MdKeyboardDoubleArrowRight className="text-lg" /></Link>
-        </section>
+        </motion.section>
     )
 }
