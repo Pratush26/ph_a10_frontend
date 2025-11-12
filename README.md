@@ -10,6 +10,14 @@ This is a food donation website that connect the needy people with the donator u
 - React Hook Form
 - Motion
 - DaisyUi
+
+## Features
+- User can explore food for get donation
+- User can donate their own foods
+- Donator can decide whom to give donation
+- Donator can update their own donation details and delete them
+- Needy people can request for donation
+- User can login and register for getting more features
 ---
 [Preview Link - 1](https://plate-share-ae79a.web.app/)
 
