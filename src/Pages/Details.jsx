@@ -1,37 +1,27 @@
-import { useLoaderData } from "react-router";
+import { useLocation } from "react-router";
 import ImgManager from "../Components/ImgManager";
 import "../Utils/utility.css"
 import { useForm } from "react-hook-form";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Loader from "../Components/Loader";
 import Error from "../Components/Error";
+import useFetchData from "../Hooks/useFetch";
+import { RxCross2 } from "react-icons/rx";
 
 export default function FoodDetails() {
-    const [reqData, setReqData] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [errMsg, setErrMsg] = useState(null)
-    const [refresh, setRefresh] = useState(false)
+    const { pathname } = useLocation()
+    const { data: data, loading: foodLoading, errMsg: foodError } = useFetchData(`foods/${pathname.split("/").pop()}`);
+    const { reqData: reqData, loading: requestsLoading, errMsg: requestsError, setRefresh } = useFetchData(`food-requestsById/${pathname.split("/").pop()}`);
+
     const { user } = useContext(AuthContext)
-    const { data } = useLoaderData()
     const modalRef = useRef(null);
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
     const handleModal = () => modalRef.current.showModal()
-    
-    useEffect(() => {
-        axios(`${import.meta.env.VITE_SERVER}/food-requestsById/${data._id}`).then(res => {
-            setReqData(res.data)
-            setErrMsg(null)
-            setLoading(false)
-        }).catch(err => {
-            setErrMsg(err.message)
-            setLoading(false)
-        })
-    }, [user, refresh, data])
-    
+
     const onSubmit = (d) => {
         const newObj = {
             location: d.location,
@@ -48,7 +38,7 @@ export default function FoodDetails() {
         axios.post(`${import.meta.env.VITE_SERVER}/request-food`, newObj).then(res => {
             if (res.data.insertedId) {
                 toast.success(`Successfully requested for ${data.name}`)
-                setRefresh(!refresh)
+                setRefresh(prev => !prev)
             }
             else toast.error(res.data)
         }).catch(err => toast.error(err))
@@ -73,12 +63,12 @@ export default function FoodDetails() {
                         text: `Successfully donated the ${data.name} to ${info.name}`,
                         icon: "success"
                     });
-                    setRefresh(!refresh)
+                    setRefresh(prev => !prev)
                 }).catch(err => toast.error(err))
             }
         });
     }
-    
+
     const handleReject = (info) => {
         Swal.fire({
             title: "Are you sure?",
@@ -96,7 +86,7 @@ export default function FoodDetails() {
                         text: `Successfully deleted ${info.name}'s food request`,
                         icon: "success"
                     });
-                    setRefresh(!refresh)
+                    setRefresh(prev => !prev)
                 }).catch(err => toast.error(err))
             }
         });
@@ -104,39 +94,49 @@ export default function FoodDetails() {
 
     return (
         <main className="w-full">
-            <section className="grid grid-cols-1 md:grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
-                <ImgManager imgUrl={data.image} altTxt="food image" styles="rounded-lg" />
-                <article className="space-y-5">
-                    <h1 className="text-4xl font-semibold">{data.name}</h1>
-                    <div className="flex items-center-safe justify-between gap-2 text-sm text-gray-600">
-                        <p>Expire Date : {new Date(data.expire_date).toLocaleDateString()}</p>
-                        <p>Quantity : {data.quantity}</p>
-                    </div>
-                    <hr />
-                    <div className="flex items-center-safe gap-4">
-                        <ImgManager imgUrl={data.donator_image} altTxt="donator image" styles="rounded-full h-10 aspect-square object-center" />
-                        <span>
-                            <p className="font-semibold">{data.donator_name}</p>
-                            <p className="text-sm text-gray-700">{data.donator_email}</p>
-                        </span>
-                    </div>
-                    <hr />
-                    <p className="font-medium">Location : {data.pickup_location}</p>
-                    <hr />
-                    <p>{data.additional_notes}</p>
-                    <button onClick={handleModal} className="btn trnsition">Request Food</button>
-                </article>
-            </section>
             {
-                user?.email === data.donator_email
-                &&
-                (loading ?
+                foodLoading ?
                     <div className="w-fit mx-auto">
                         <Loader />
                     </div>
                     :
-                    errMsg ?
-                        <Error msg={errMsg} />
+                    foodError ?
+                        <Error msg={foodError} />
+                        :
+                        <section className="grid grid-cols-1 md:grid-cols-2 items-center-safe justify-items-center-safe gap-8 w-11/12 mx-auto my-10">
+                            <ImgManager imgUrl={data.image} altTxt="food image" styles="rounded-lg" />
+                            <article className="space-y-5">
+                                <h1 className="text-4xl font-semibold">{data.name}</h1>
+                                <div className="flex items-center-safe justify-between gap-2 text-sm text-gray-600">
+                                    <p>Expire Date : {new Date(data.expire_date).toLocaleDateString()}</p>
+                                    <p>Quantity : {data.quantity}</p>
+                                </div>
+                                <hr />
+                                <div className="flex items-center-safe gap-4">
+                                    <ImgManager imgUrl={data.donator_image} altTxt="donator image" styles="rounded-full h-10 aspect-square object-center" />
+                                    <span>
+                                        <p className="font-semibold">{data.donator_name}</p>
+                                        <p className="text-sm text-gray-700">{data.donator_email}</p>
+                                    </span>
+                                </div>
+                                <hr />
+                                <p className="font-medium">Location : {data.pickup_location}</p>
+                                <hr />
+                                <p>{data.additional_notes}</p>
+                                <button onClick={handleModal} className="btn trnsition">Request Food</button>
+                            </article>
+                        </section>
+            }
+            {
+                user?.email === data.donator_email
+                &&
+                (requestsLoading ?
+                    <div className="w-fit mx-auto">
+                        <Loader />
+                    </div>
+                    :
+                    requestsError ?
+                        <Error msg={requestsError} />
                         :
                         <table className="table-auto text-center text-sm my-8 font-medium border-collapse border border-gray-400 w-11/12 mx-auto rounded-md overflow-hidden">
                             <caption className='text-4xl font-bold mb-8'>Foods Request : <span className="text-green-600">{reqData?.length}</span></caption>
@@ -180,6 +180,7 @@ export default function FoodDetails() {
             {/* Modal section */}
             <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
+                <button onClick={() => modalRef.current.close()} type="button" className="cursor-pointer"><RxCross2 /></button>
                     <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-full sm:px-8 py-12 my-6 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
                         <h1 className="text-2xl font-bold">Info Form</h1>
                         <div className="w-full">

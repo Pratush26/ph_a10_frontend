@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import ImgManager from "../Components/ImgManager";
@@ -8,25 +8,12 @@ import Error from "../Components/Error";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
+import useFetchData from "../Hooks/useFetch";
 
 export default function MyRequestsPage() {
-    const [loading, setLoading] = useState(true)
-    const [errMsg, setErrMsg] = useState(null)
     const { user } = useContext(AuthContext)
-    const [data, setData] = useState([])
-    const [foodReq, setFoodReq] = useState([])
-    const [refresh, setRefresh] = useState(false)
-    useEffect(() => {
-        axios(`${import.meta.env.VITE_SERVER}/food-requestsByEmail/${user?.email}`).then(res => {
-            setFoodReq(res.data.requests)
-            setData(res.data.foods)
-            setErrMsg(null)
-            setLoading(false)
-        }).catch(err => {
-            setErrMsg(err.message)
-            setLoading(false)
-        })
-    }, [user, refresh])
+    const { data, loading, errMsg, setRefresh } = useFetchData(`food-requestsByEmail/${user?.email}`);
+
     const handleDelete = (info) => {
         Swal.fire({
             title: "Are you sure?",
@@ -48,11 +35,12 @@ export default function MyRequestsPage() {
                         text: `Successfully deleted !`,
                         icon: "success"
                     });
-                    setRefresh(!refresh)
+                    setRefresh(prev => !prev)
                 }).catch(err => toast.error(err))
             }
         });
     }
+
     return (
         <main className="w-full my-10">
             {
@@ -65,7 +53,7 @@ export default function MyRequestsPage() {
                         <Error msg={errMsg} />
                         :
                         <table className="table-auto text-center text-sm font-medium border-collapse border border-gray-400 w-full sm:w-11/12 mx-auto rounded-md overflow-hidden">
-                            <caption className='text-4xl font-bold mb-8'>My <span className='text-green-700'>Requests</span> : {data?.length}</caption>
+                            <caption className='text-4xl font-bold mb-8'>My <span className='text-green-700'>Requests</span> : {data?.foods?.length}</caption>
                             <thead>
                                 <tr className="bg-gray-200">
                                     <th className="hidden sm:block">SL no.</th>
@@ -77,7 +65,7 @@ export default function MyRequestsPage() {
                             </thead>
                             <tbody className="text-gray-800">
                                 {
-                                    data?.map((e, i) => (
+                                    data?.foods?.map((e, i) => (
                                         <tr key={i} className="border border-gray-300 bg-white">
                                             <td className="hidden sm:table-cell">{i + 1}</td>
                                             <td>
@@ -90,10 +78,10 @@ export default function MyRequestsPage() {
                                                 </div>
                                             </td>
                                             <td>{new Date(e.expire_date).toLocaleDateString()}</td>
-                                            <td className="hidden sm:table-cell"><span className={`${e.status === 'accepted' ? "bg-green-600" : "bg-yellow-600"} rounded-full px-4 text-white py-1 text-xs font-semibold`}>{foodReq.find(c => c.food_id === e._id).status}</span></td>
+                                            <td className="hidden sm:table-cell"><span className={`${e.status === 'accepted' ? "bg-green-600" : "bg-yellow-600"} rounded-full px-4 text-white py-1 text-xs font-semibold`}>{data?.requests?.find(c => c.food_id === e._id).status}</span></td>
                                             <td>
                                                 <div className="flex justify-center gap-2 flex-wrap">
-                                                <button onClick={() => handleDelete(foodReq.find(c => c.food_id === e._id))} className="btn-out trnsition hover:text-gray-500">Delete</button>
+                                                    <button onClick={() => handleDelete(data?.requests?.find(c => c.food_id === e._id))} className="btn-out trnsition hover:text-gray-500">Delete</button>
                                                 </div>
                                             </td>
                                         </tr>

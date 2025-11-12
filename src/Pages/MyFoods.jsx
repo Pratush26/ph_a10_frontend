@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import axios from "axios";
 import ImgManager from "../Components/ImgManager";
@@ -8,34 +8,15 @@ import Error from "../Components/Error";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { Link } from "react-router";
+import useFetchData from "../Hooks/useFetch";
 
 export default function MyFoodsPage() {
-    const [loading, setLoading] = useState(true)
-    const [errMsg, setErrMsg] = useState(null)
     const { user } = useContext(AuthContext)
-    const [data, setData] = useState([])
-    const [foodReq, setFoodReq] = useState([])
-    const [refresh, setRefresh] = useState(false)
-    useEffect(() => {
-        axios(`${import.meta.env.VITE_SERVER}/my-foods/${user?.email}`, {
-            headers: { Authorization: `Bearer ${user?.accessToken}` }
-        }).then(res => {
-            setData(res.data)
-            setErrMsg(null)
-            setLoading(false)
-        }).catch(err => {
-            setErrMsg(err.message)
-            setLoading(false)
-        })
-        axios(`${import.meta.env.VITE_SERVER}/food-reqs-donatorEmail/${user?.email}`).then(res => {
-            setFoodReq(res.data)
-            setErrMsg(null)
-            setLoading(false)
-        }).catch(err => {
-            setErrMsg(err.message)
-            setLoading(false)
-        })
-    }, [user, refresh])
+    const { data, loading: dataLoad, errMsg: dataErr, setRefresh } = useFetchData(`my-foods/${user?.email}`);
+    const { data: foodReq, loading: reqLoad, errMsg: reqErr, setRefresh: setReqRefresh } = useFetchData(`food-reqs-donatorEmail/${user?.email}`);
+    const loading = dataLoad && reqLoad
+    const errorMsg = dataErr && reqErr
+    
     const handleDelete = (info) => {
         Swal.fire({
             title: "Are you sure?",
@@ -57,7 +38,8 @@ export default function MyFoodsPage() {
                         text: `Successfully deleted ${info.name}`,
                         icon: "success"
                     });
-                    setRefresh(!refresh)
+                    setRefresh(prev => !prev)
+                    setReqRefresh(prev => !prev)
                 }).catch(err => toast.error(err))
             }
         });
@@ -70,8 +52,8 @@ export default function MyFoodsPage() {
                         <Loader />
                     </div>
                     :
-                    errMsg ?
-                        <Error msg={errMsg} />
+                    errorMsg ?
+                        <Error msg={errorMsg} />
                         :
                         <table className="table-auto text-center text-sm font-medium border-collapse border border-gray-400 w-full sm:w-11/12 mx-auto rounded-md overflow-hidden">
                             <caption className='text-4xl font-bold mb-8'>My <span className='text-green-700'>Foods</span> : {data?.length}</caption>

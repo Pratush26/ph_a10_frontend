@@ -8,7 +8,7 @@ export default function HomePage() {
     const { data } = useLoaderData()
     const { user } = useContext(AuthContext)
     return (
-        <main className="w-full">9
+        <main className="w-full">
             <section id="hero" className="w-full relative min-h-[50vh] lg:min-h-[80vh] 2xl:min-h-screen z-10 grid grid-cols-1 md:grid-cols-2 p-6 items-center-safe text-white">
                 <div className="w-full min-h-full absolute z-3 mix-blend-darken bg-linear-to-r from-transparent from-10% via-gray-600 via-30% to-black"></div>
                 <img src="https://images.unsplash.com/photo-1562709902-31c9a3b1ad5c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1031"

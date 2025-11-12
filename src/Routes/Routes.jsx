@@ -29,7 +29,6 @@ export const router = createBrowserRouter([
         },
         {
             path: '/all-foods',
-            loader: () => axios(`${import.meta.env.VITE_SERVER}/foods`),
             element: <PrivateRoute><AllFoodsPage /></PrivateRoute>
         },
         {
@@ -46,7 +45,6 @@ export const router = createBrowserRouter([
         },
         {
             path: '/food/details/:id',
-            loader: async ({params}) => axios(`${import.meta.env.VITE_SERVER}/foods/${params.id}`),
             element: <PrivateRoute><FoodDetails /></PrivateRoute>
         },
         {
