@@ -14,8 +14,8 @@ import { RxCross2 } from "react-icons/rx";
 
 export default function FoodDetails() {
     const { pathname } = useLocation()
-    const { data: data, loading: foodLoading, errMsg: foodError } = useFetchData(`foods/${pathname.split("/").pop()}`);
-    const { reqData: reqData, loading: requestsLoading, errMsg: requestsError, setRefresh } = useFetchData(`food-requestsById/${pathname.split("/").pop()}`);
+    const { data, loading: foodLoading, errMsg: foodError } = useFetchData(`foods/${pathname.split("/").pop()}`);
+    const { data: reqData, loading: requestsLoading, errMsg: requestsError, setRefresh } = useFetchData(`food-requestsById/${pathname.split("/").pop()}`);
 
     const { user } = useContext(AuthContext)
     const modalRef = useRef(null);
@@ -35,7 +35,9 @@ export default function FoodDetails() {
             food_id: data._id,
             donator_email: data.donator_email
         }
-        axios.post(`${import.meta.env.VITE_SERVER}/request-food`, newObj).then(res => {
+        axios.post(`${import.meta.env.VITE_SERVER}/request-food`, newObj, {
+            headers: { Authorization: `Bearer ${user?.accessToken}` },
+        }).then(res => {
             if (res.data.insertedId) {
                 toast.success(`Successfully requested for ${data.name}`)
                 setRefresh(prev => !prev)
@@ -57,7 +59,9 @@ export default function FoodDetails() {
             confirmButtonText: "Yes, donate it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${info._id}`, { foodId: data._id }).then(() => {
+                axios.put(`${import.meta.env.VITE_SERVER}/donate-foods/${info._id}`, { foodId: data._id }, {
+                    headers: { Authorization: `Bearer ${user?.accessToken}` },
+                }).then(() => {
                     Swal.fire({
                         title: "Donated!",
                         text: `Successfully donated the ${data.name} to ${info.name}`,
@@ -80,7 +84,9 @@ export default function FoodDetails() {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`${import.meta.env.VITE_SERVER}/delete-request/${info._id}`).then(() => {
+                axios.delete(`${import.meta.env.VITE_SERVER}/delete-request/${info._id}`, {
+                    headers: { Authorization: `Bearer ${user?.accessToken}` },
+                }).then(() => {
                     Swal.fire({
                         title: "Deleted!",
                         text: `Successfully deleted ${info.name}'s food request`,
@@ -152,7 +158,7 @@ export default function FoodDetails() {
                             </thead>
                             <tbody className="text-gray-800">
                                 {
-                                    reqData.map((e, i) => (
+                                    reqData?.map((e, i) => (
                                         <tr key={i} className="border border-gray-300 bg-white">
                                             <td>{i + 1}</td>
                                             <td>
@@ -180,7 +186,7 @@ export default function FoodDetails() {
             {/* Modal section */}
             <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
-                <button onClick={() => modalRef.current.close()} type="button" className="cursor-pointer"><RxCross2 /></button>
+                    <button onClick={() => modalRef.current.close()} type="button" className="cursor-pointer"><RxCross2 /></button>
                     <form onSubmit={handleSubmit(onSubmit)} className="bg-white w-full sm:px-8 py-12 my-6 rounded-lg flex flex-col items-center-safe justify-center-safe gap-3" >
                         <h1 className="text-2xl font-bold">Info Form</h1>
                         <div className="w-full">

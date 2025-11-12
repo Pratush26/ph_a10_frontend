@@ -24,7 +24,9 @@ export default function AddFoodForm() {
                 status: "available",
                 donator_image: user.photoURL
             }
-            axios.post(`${import.meta.env.VITE_SERVER}/create-food`, dataObj).then(r => {
+            axios.post(`${import.meta.env.VITE_SERVER}/create-food`, dataObj, {
+            headers: { Authorization: `Bearer ${user?.accessToken}` },
+        }).then(r => {
                 if (r.data.insertedId) toast.success("Successfully created food info")
                 else toast.error("some wrong")
                 reset()

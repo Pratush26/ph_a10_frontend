@@ -19,8 +19,7 @@ export default function useFetchData(url) {
             setData(res.data);
             setErrMsg(null);
         }).catch((err) => {
-            if (typeof err.message !== "string") setErrMsg(JSON.stringify(err.message))
-            else setErrMsg(err.message)
+            setErrMsg(err.message)
         }).finally(() => setLoading(false))
     }, [url, user, refresh])
     return { data, loading, errMsg, setRefresh };
