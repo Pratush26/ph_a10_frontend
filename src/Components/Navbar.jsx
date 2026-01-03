@@ -38,12 +38,14 @@ export default function Navbar() {
                                     <p>{user?.displayName}</p>
                                     <IoIosArrowDown />
                                 </div>
-                                <div className={`${isHover ? "bg-stone-50" : "hidden"} absolute w-full text-start bottom-0 translate-y-full z-100 flex flex-col`}>
-                                    <Link className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2" to='/my-foods'>My Foods</Link>
-                                    <Link className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2" to='/my-requests'>My Requests</Link>
-                                    <Link className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2" to='/add-food'>Add Food</Link>
+                                <aside className={`${isHover ? "bg-stone-50" : "hidden"} absolute w-full text-start bottom-0 translate-y-full z-100 flex flex-col`}>
+                                    <NavLink className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2" to='/dashboard'>Dashboard</NavLink>
+                                    <NavLink className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2" to='/my-foods'>My Foods</NavLink>
+                                    <NavLink className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2" to='/my-requests'>My Requests</NavLink>
+                                    <NavLink className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2" to='/add-food'>Add Food</NavLink>
+                                    <NavLink className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2" to='/Profile'>Profile</NavLink>
                                     <button onClick={handleSignOut} className="w-full text-start cursor-pointer hover:bg-green-50 trnsition px-4 py-2">Log out</button>
-                                </div>
+                                </aside>
                             </section>
                             :
                             <div className="hidden sm:block space-x-3">

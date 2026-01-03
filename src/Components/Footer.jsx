@@ -3,8 +3,12 @@ import '../Utils/utility.css'
 import Logo from '/logo.svg'
 import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
+import { useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
+import Loader from "./Loader";
 
 export default function Footer() {
+    const { user, loading } = useContext(AuthContext);
     return (
         <section className="bg-gray-900 text-white pt-12 px-2 w-full">
             <footer className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 place-content-between gap-5 w-11/12 mx-auto">
@@ -16,14 +20,26 @@ export default function Footer() {
                     <h6 className="text-lg font-semibold text-white">Quick Links</h6>
                     <Link className="hover:text-gray-200 trnsition" to='/all-foods'>All Foods</Link>
                     <Link className="hover:text-gray-200 trnsition" to='/'>Home</Link>
-                    <Link className="hover:text-gray-200 trnsition" to='/login'>Login</Link>
-                    <Link className="hover:text-gray-200 trnsition" to='/register'>Register</Link>
+                    <Link className="hover:text-gray-200 trnsition" to='/terms'>Terms & Conditions</Link>
                 </div>
                 <div className="text-gray-400 flex flex-col gap-3 text-sm">
                     <h6 className="text-lg font-semibold text-white">Features</h6>
-                    <Link className="hover:text-gray-200 trnsition" to='/add-food'>Add Foods</Link>
-                    <Link className="hover:text-gray-200 trnsition" to='/my-foods'>My Foods</Link>
-                    <Link className="hover:text-gray-200 trnsition" to='/my-requests'>My Requests</Link>
+                    {
+                        loading ?
+                            <Loader />
+                            :
+                            user ?
+                                <>
+                                    <Link className="hover:text-gray-200 trnsition" to='/add-food'>Add Foods</Link>
+                                    <Link className="hover:text-gray-200 trnsition" to='/my-foods'>My Foods</Link>
+                                    <Link className="hover:text-gray-200 trnsition" to='/my-requests'>My Requests</Link>
+                                </>
+                                :
+                                <>
+                                    <Link className="hover:text-gray-200 trnsition" to='/login'>Login</Link>
+                                    <Link className="hover:text-gray-200 trnsition" to='/register'>Register</Link>
+                                </>
+                    }
                 </div>
                 <div className="text-gray-400 flex flex-col gap-3 text-sm">
                     <h6 className="text-lg font-semibold text-white">Contact & Support</h6>
@@ -34,9 +50,9 @@ export default function Footer() {
                 <div className="text-gray-400 space-x-3 space-y-2 text-xl">
                     <h6 className="text-lg font-semibold text-white">Social Links</h6>
                     <div className="flex gap-3">
-                    <a className="hover:text-gray-200 trnsition" href="" target="_blank"><FaFacebookSquare /></a>
-                    <a className="hover:text-gray-200 trnsition" href="" target="_blank"><FaSquareXTwitter /></a>
-                    <a className="hover:text-gray-200 trnsition" href="" target="_blank"><FaInstagramSquare /></a>
+                        <a className="hover:text-gray-200 trnsition" href="https://www.facebook.com" target="_blank"><FaFacebookSquare /></a>
+                        <a className="hover:text-gray-200 trnsition" href="https://twitter.com" target="_blank"><FaSquareXTwitter /></a>
+                        <a className="hover:text-gray-200 trnsition" href="https://www.instagram.com" target="_blank"><FaInstagramSquare /></a>
                     </div>
                 </div>
             </footer>

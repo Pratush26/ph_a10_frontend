@@ -9,3 +9,22 @@ body {
   font-family: "Inter", sans-serif;
   background-color: whitesmoke;
 }
+
+nav div>a.active {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+nav aside>a.active {
+    background-color: #efefef;
+}
+
+.btn {
+    @apply px-4 py-2 text-sm font-medium bg-linear-to-br cursor-pointer from-green-800 to-green-500 hover:from-green-900 hover:to-green-600 text-white rounded-sm;
+}
+.btn-out {
+    @apply px-4 py-2 text-sm font-semibold border cursor-pointer rounded-sm;
+}
+
+.trnsition {
+    @apply transition-all duration-200 transition-discrete;
+}

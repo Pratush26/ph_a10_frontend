@@ -14,6 +14,9 @@ import NotFoundPage from "../Pages/NotFound";
 import ErrorPage from "../Layouts/ErrorPage";
 import UpdateFoodPage from "../Pages/UpdateFood";
 import MyRequestsPage from "../Pages/MyRequests";
+import Dashboard from "../Pages/Dashboard";
+import Profile from "../Pages/Profile";
+import Terms from "../Pages/terms";
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +32,15 @@ export const router = createBrowserRouter([
         },
         {
             path: '/all-foods',
-            element: <PrivateRoute><AllFoodsPage /></PrivateRoute>
+            Component: AllFoodsPage
+        },
+        {
+            path: '/food/details/:id',
+            Component: FoodDetails
+        },
+        {
+            path: '/terms',
+            Component: Terms
         },
         {
             path: '/my-foods',
@@ -44,12 +55,16 @@ export const router = createBrowserRouter([
             element: <PrivateRoute><AddFoodForm /></PrivateRoute>
         },
         {
-            path: '/food/details/:id',
-            element: <PrivateRoute><FoodDetails /></PrivateRoute>
-        },
-        {
             path: '/update-food',
             element: <PrivateRoute><UpdateFoodPage /></PrivateRoute>
+        },
+        {
+            path: '/dashboard',
+            element: <PrivateRoute><Dashboard /></PrivateRoute>
+        },
+        {
+            path: '/profile',
+            element: <PrivateRoute><Profile /></PrivateRoute>
         },
         {
             path: '/register',
