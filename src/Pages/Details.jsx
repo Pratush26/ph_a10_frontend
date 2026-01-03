@@ -1,4 +1,4 @@
-import { useLocation } from "react-router";
+import { Navigate, useLocation } from "react-router";
 import ImgManager from "../Components/ImgManager";
 import "../Utils/utility.css"
 import { useForm } from "react-hook-form";
@@ -24,6 +24,7 @@ export default function FoodDetails() {
     const handleModal = () => modalRef.current.showModal()
 
     const onSubmit = (d) => {
+        if(!user) return <Navigate state={pathname} to="/login" />
         const newObj = {
             location: d.location,
             phone: d.phone,
