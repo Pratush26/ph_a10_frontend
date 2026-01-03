@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import ImgManager from "../Components/ImgManager";
 import "../Utils/utility.css"
 import { useForm } from "react-hook-form";
@@ -9,22 +9,29 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Loader from "../Components/Loader";
 import Error from "../Components/Error";
-import useFetchData from "../Hooks/useFetch";
+import useFetchData, { useFetch } from "../Hooks/useFetch";
 import { RxCross2 } from "react-icons/rx";
 import { motion } from "motion/react";
 
 export default function FoodDetails() {
     const { pathname } = useLocation()
-    const { data, loading: foodLoading, errMsg: foodError } = useFetchData(`foods/${pathname.split("/").pop()}`);
+    const navigate = useNavigate();
+    const { data, loading: foodLoading, errMsg: foodError } = useFetch(`foods/${pathname.split("/").pop()}`);
     const { data: reqData, loading: requestsLoading, errMsg: requestsError, setRefresh } = useFetchData(`food-requestsById/${pathname.split("/").pop()}`);
 
     const { user } = useContext(AuthContext)
     const modalRef = useRef(null);
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
-    const handleModal = () => modalRef.current.showModal()
+    const handleModal = () => {
+        if (!user) {
+            navigate("/login", { state: { from: location.pathname } });
+            toast.info("Login is required for your desired action")
+            return;
+        }
+        modalRef.current.showModal()
+    }
 
     const onSubmit = (d) => {
-        if(!user) return <Navigate state={pathname} to="/login" />
         const newObj = {
             location: d.location,
             phone: d.phone,
@@ -118,11 +125,11 @@ export default function FoodDetails() {
                                 transition={{ duration: 0.5 }}>
                                 <ImgManager imgUrl={data.image} altTxt="food image" styles="rounded-lg" />
                             </motion.div>
-                            <motion.article 
-                            initial={{ opacity: 0, scale: 0.7, x: 100 }}
+                            <motion.article
+                                initial={{ opacity: 0, scale: 0.7, x: 100 }}
                                 animate={{ opacity: 1, scale: 1, x: 0 }}
                                 transition={{ duration: 0.5 }}
-                            className="space-y-5">
+                                className="space-y-5">
                                 <h1 className="text-4xl font-semibold">{data.name}</h1>
                                 <div className="flex items-center-safe justify-between gap-2 text-sm text-gray-600">
                                     <p>Expire Date : {new Date(data.expire_date).toLocaleDateString()}</p>

@@ -1,10 +1,10 @@
 import Error from "../Components/Error";
 import FoodCard from "../Components/FoodCard";
 import Loader from "../Components/Loader";
-import useFetchData from "../Hooks/useFetch";
+import { useFetch } from "../Hooks/useFetch";
 
 export default function AllFoodsPage() {
-    const { data, loading, errMsg } = useFetchData("foods");
+    const { data, loading, errMsg } = useFetch("foods");
     return (
         <main>
             {

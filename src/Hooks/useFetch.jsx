@@ -24,3 +24,22 @@ export default function useFetchData(url) {
     }, [url, user, refresh])
     return { data, loading, errMsg, setRefresh };
 }
+
+export function useFetch(url) {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [errMsg, setErrMsg] = useState(null);
+    const [refresh, setRefresh] = useState(false)
+
+    useEffect(() => {
+        setLoading(true);
+        setErrMsg(null);
+        axios(`${import.meta.env.VITE_SERVER}/${url}`).then((res) => {
+            setData(res.data);
+            setErrMsg(null);
+        }).catch((err) => {
+            setErrMsg(err.message)
+        }).finally(() => setLoading(false))
+    }, [url, refresh])
+    return { data, loading, errMsg, setRefresh };
+}
